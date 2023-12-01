@@ -1,0 +1,657 @@
+---
+title: "Tools for Efficient Workflows <br> Part 2: Version control"
+subtitle: "Lukas Lehner and Maximilian Trenkmann"
+date: "UCL/NCRM, 01/12/2023"
+format:
+  revealjs:
+    toc: false
+    number-sections: false
+    theme: default
+    slide-number: c/t
+    self-contained: true
+    chalkboard: false
+    multiplex: true
+    scrollable: true
+    footer: "Tools for Efficient Workflows"
+    smaller: false
+    preview-links: auto
+    css: styles.css
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+## Our plan {.smaller}
+
+
+```{r setup}
+pacman::p_load(
+  knitr,
+  tidyverse, 
+  countdown)
+```
+
+1.  Automatable reports
+
+2.  **Version control**
+
+3.  Dissemination and academic websites
+
+4.  Containerisation for reproducible environments
+
+5.  Encryption and advanced programming
+
+## What did we do so far?
+
+-   **Automatable reports**
+
+::: notes
+:::
+
+
+# Session 2: Version control {background-color="aquamarine"}
+
+-   Part I: Version control
+-   Part II: GitHub and GitHub Desktop
+-   Part III: Collaborating with GitHub
+
+::: notes
+
+-   **Version control**
+    -   **Lectures:** Conceptional underpinning of modern version control tools such as Git.
+    -   **Lab exercises:** Collaboration in teams on coding challenges to familiarize ourselves with the Git version control system and key Git operations, including branching, merging, forking, and resolving merge conflicts.
+
+
+:::
+
+
+
+## Readings with further information
+
+  -   Bryan. 2018. Excuse Me, Do You Have a Moment to Talk About Version Control? The American Statistician, 72(1), 20-27. <https://doi.org/10.1080/00031305.2017.1399928>
+  -   Turner et al. 2020. Open Code and Software: a Primer from UKRN. <https://doi.org/10.31219/osf.io/qw9ck>
+  -   Git and GitHub for R. <https://happygitwithr.com/>
+   -   Brailey. 2022. Using GitHub and Rstudio. <https://osf.io/dgw2s/>
+
+# Part I: Version control {background-color="aquamarine"}
+
+## Why GitHub? The analogy of climbing
+
+![](figs/github_wickham_bryan_git_quote.png) Source: illustrations by [\@allison_horst](https://twitter.com/allison_horst)
+
+::: notes
+Hadley Wickham and Jenny Bryan use the analogy of climbing to describe how GitHub can keep us safe while also showing our journey.
+:::
+
+## Git
+
+> -   Who has used Git previously? What for?
+> -   Who has used any kind of version control previously?
+
+## Git as Version Control
+
+You all have used version control previously:
+
+-   "Save early, save often".
+-   Easiest version control: the back-button.
+-   "Track-changes" in MS Word is a rudimentary form of version control.
+
+ 
+
+Git is a sophisticated form of version control.
+Git...
+
+-   ... maintains a single, updated version of each file.
+-   ... keeps a record of all previous versions.
+-   ... keeps a record of exact changes between the versions.
+-   ... collaborators can work simultaneously.
+-   ... documents who made changes, when and why.
+
+## Why should I learn yet another tool? {.flexbox .vcenter}
+
+```{r, echo=FALSE, out.width="60%", fig.cap=""}
+knitr::include_graphics("figs/Comic_version_control.gif")
+```
+
+## Why should I learn yet another tool? Git as Version Control
+
+> -   Maintain an overview
+> -   Access previous versions
+
+ 
+
+> -   Strengthen Collaboration
+> -   Foster Transparency
+
+ 
+
+> -   **Next:**
+> -   Create an academic website
+> -   Create an academic CV
+> -   → Qmd and Rmd allow us to use the same document for both
+
+## Git: a preview
+
+![](figs/git_workflow.png){width="20%"}
+
+## Why Git? 1) Streamline your work
+
+![](./figs/github_compare_text.png)
+
+Source: illustrations by [\@allison_horst](https://twitter.com/allison_horst)
+
+::: notes
+GitHub helps streamline our work GitHub helps streamline our work because it takes care of otherwise time-consuming bookkeeping and unrelenting file tracking.
+Instead of spending our time inspecting and fretting over whether "Analysis_final_v2.xls" or "analysis_final_final.xls" is truly the final version, with GitHub we can be confident in our completed analysis and move to the next step.
+:::
+
+## Why Git? 2) Support others and yourself
+
+![](figs/github_groundcrew_text.png)
+
+Source: illustrations by [\@allison_horst](https://twitter.com/allison_horst)
+
+::: notes
+GitHub helps us support GitHub helps us support others and existing work.
+Whether we are organizing, improving documentation, or asking and answering questions, GitHub helps us provide support to our collaborators on projects, whether we are writing code or not.
+:::
+
+## Why Git? 3) Reuse your work
+
+![](figs/github_reuse.jpg)
+
+Source: illustrations by [\@allison_horst](https://twitter.com/allison_horst)
+
+::: notes
+GitHub helps us reuse GitHub helps us reuse existing work, which lets us learn and build from other people's shared experience rather than reinventing on our own.
+Plus, the existing work gets better each time someone tries it and shares their experience back.
+Whether it's code, documentation, or knowledge through posted conversations, reusing existing things can save time, resources, and frustration.
+Importantly, reuse also expands the value of existing work while celebrating the contributions of others.
+:::
+
+## Why Git? 4) Contribute earlier
+
+![](figs/github_clip.png)
+
+Source: illustrations by [\@allison_horst](https://twitter.com/allison_horst)
+
+::: notes
+GitHub helps us contribute GitHub helps us contribute ideas through code, text, and more, with less worry about file management.
+This helps us feel more confident to share work-in-progress and contribute to existing work, knowing that we won't break things.
+It also helps us share work earlier that might be imperfect, since we can still make changes from there.
+:::
+
+## Why Git? 5) Fail safely
+
+![](figs/github_fall.png)
+
+Source: illustrations by [\@allison_horst](https://twitter.com/allison_horst)
+
+::: notes
+GitHub helps us fail safely GitHub helps us fail safely.
+Because we can return to previous versions easily, painful consequences of failing are reduced.
+We can more bravely try things and start making contributions, knowing that some (many?) will fail - but won't be catastrophic!
+When we fail, we'll be able to start again from where we left off (instead of from the ground), and a clear history can help us learn from the past.
+:::
+
+## Why Git? Summary
+
+1)  Streamline your work
+2)  Support others and yourself
+3)  Reuse your work
+4)  Contribute earlier
+5)  Fail safely
+
+## Git: Terminiology (1): pillars {.smaller}
+
+-   **repository (repo)**
+-   **commit**
+-   **diff**
+
+ 
+
+-   **branch**
+-   **remote**
+-   **local**
+-   **commit message and tag**
+-   **gist**
+-   **README**
+
+::: notes
+1)  Explain to your neighbor
+
+2)  Collect responses from class
+
+3)  Clarify
+:::
+
+## Git: Terminiology (1): pillars {.smaller}
+
+-   **repository (repo):** directory of files
+-   **commit:** snapshot of directory
+-   **diff:** difference between two commits
+
+ 
+
+-   **branch:** detour from main stream without changing main stream
+-   **remote:** repo hosted online
+-   **local:** repo on your hard drive (offline)
+-   **commit message and tag:** notes assigned to commits
+-   **gist:** small repo to share one code file
+-   **README:** "About me" section of your repository or your GitHub profile
+
+::: notes
+A repository is a project containing files and folders.
+A repository tracks versions of files and folders.
+
+A branch is a parallel version of your repository.
+By default, your repository has one branch named main and it is considered to be the definitive branch.
+You can create additional branches off of main in your repository.
+You can use branches to have different versions of a project at one time.
+
+On additional branches, you can make edits without impacting the main version.
+Branches allow you to separate your work from the main branch.
+In other words, everyone's work is safe while you contribute.
+
+A profile README is essentially an "About me" section on your GitHub profile where you can share information about yourself with the community on GitHub.com.
+GitHub shows your profile README at the top of your profile page.
+:::
+
+
+## Git: Terminiology (2): actions {.smaller}
+
+-   **to commit**
+-   **to merge**
+-   **to fork**
+-   **to clone**
+-   **to push**
+-   **to pull**
+
+::: notes
+1)  Explain to your neighbour
+
+2)  Collect responses from class
+
+3)  Clarify
+:::
+
+## Git: Terminiology (2): actions {.smaller}
+
+-   **to commit:** create a commit
+-   **to merge:** merge on branch into another branch
+-   **to fork:** create a copy of someone else's repo in your GitHub account
+-   **to clone:** create your local copy of the repo
+-   **to push:** upload changes from your local to your remote
+-   **to pull:** update local from remote
+
+::: notes
+:::
+
+## To recap at home
+
+-   What is a ... ?
+    -   [Repository](https://www.youtube.com/watch?v=R8OAwrcMlRw)
+    -   [Branch](https://www.youtube.com/watch?v=xgQmu81G1yY)
+    -   [Pull request](https://www.youtube.com/watch?v=kJr-PIfLDl4)
+    -   [work flow using Git](https://www.youtube.com/watch?v=PBI2Rz-ZOxU)
+
+
+
+# Lab Session I 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Simulation to learn using [basic Git commands](https://learngitbranching.js.org/) {#lab-session-1 background-color="#f3e2b4"}
+
+::: {.content-box-blue .fragment}
+-   Try to complete the online exercises to understand the git logic:
+    -   Main: Introduction Sequence: (first 4 exercises)
+    -   Remote: Push & Pull: (first 4 exercises)
+:::
+
+::: {.fragment}
+### 🎁 Bonus
+  -   *Main: Ramping Up*
+  -   *Main: Moving Work Around*
+  -   *Main: A Mixed Bag*
+  -   *Remote: To Origin And Beyond -- Advanced Git Remotes!*
+:::
+
+
+
+```{r}
+countdown(minutes = 25, font_size = "1.5em")
+```
+
+::: notes
+Assign participants to groups of 2-3.
+They can help each other out in groups.
+I will float between groups.
+
+You learned about GitHub, repositories, branches, commits, and pull requests.
+You created a branch, a commit, and a pull request.
+You merged a pull request.
+:::
+
+
+
+
+# Part II: GitHub and GitHub Desktop {background-color="aquamarine"}
+
+## Git basics
+
+Generally, git operates through a shell.
+*(Later on, we will install a GUI can make life easier.)*
+
+### What is a shell?
+
+::: fragment
+A shell (or terminal) is a program on your computer whose job is to run other programs, rather than do calculations itself.
+
+Let's start open the shell in In RStudio: *Tools \> Shell*.
+
+A note for Windows users: the default Windows shell does not support git commands.
+However, we can solve this by installing *GitBash* - a light shell that does support git commands.
+:::
+
+::: note
+Basic shell commands: <https://cfss.uchicago.edu/setup/shell/>
+:::
+
+
+## Git: Terminiology (3): what's the difference?
+
+![](figs/git_logo.jpeg){width="25%"} ![](figs/github_logo.png){width="33%"} ![](figs/github_desktop_logo.jpg){width="33%"}
+
+::: notes
+1)  Discuss with your neighbor
+
+2)  Collect responses from class
+
+3)  Clarify
+
+We're targeting GitHub - not Bitbucket or GitLab - for the sake of specificity.
+However, all the big-picture principles and even some mechanics will carry over to these alternative hosting platforms.
+We are advocating for the use of hosted version control as a general concept, with GitHub being the best and most common provider today.
+
+In Git your write in bash to execute commands.
+But on GitHub you write in Markdown as a markup language.
+:::
+
+## Git: Terminiology (3): tools
+
+**Git** is the command line version control system (VCS) software, which works on your local computer.
+
+**GitHub** is an internet hosting service for git repositories.
+
+**GitHub Desktop** is an application that enables you to interact with GitHub using a GUI instead of the command line or a web browser.
+
+::: notes
+**Git** is the command line version control system (VCS) software, which works on your local computer.
+Git was created in 2005 for development of the Linux kernel.
+
+**GitHub** is an internet hosting service for git repositories.
+Public repos are free; private repos are paid (except for pro version).
+As a shared space for repos, it allows you to do collaborative work.
+There are many other git hosting services, such as GitLab or Bitbucket.
+You need Git to use GitHub but you can use Git locally without GitHub.
+
+**GitHub Desktop** is an application that enables you to interact with GitHub using a GUI instead of the command line or a web browser.
+There are many other git GUI applications, such as GitKraken or Sourcetree.
+You need GitHub (or another Git hosting service) to use GitHub Desktop but you can use GitHub without GitHub Desktop using commands.
+
+However: use Git only for small files.
+If you have to store a large data file in your repo, you can use Git Large File Storage but it is not for free.
+It is a separate program you need to install via the shell.
+:::
+
+## GitHub Desktop: Getting started
+
+-   Install and use [GitHub Desktop](https://desktop.github.com/) (especially for beginners)
+
+![](figs/GitHub_desktop_1.PNG){width="80%"}
+
+## GitHub Desktop: track version history
+
+![](figs/GitHub_desktop_2.PNG){width="80%"}
+
+## Using GitHub and Rstudio integrated
+
+![](figs/rstudio_git.png)
+## Pro Tip
+
+ -  *Sign up for a free [GitHub Pro account](https://education.github.com/pack) if you are a student or a free [GitHub Team account](https://education.github.com/discount_requests/teacher_application) if you are a teacher.*
+
+
+## Common mistake
+
+> -   You don't remember whether you have Git installed previously.
+
+> -   Solution: You may be able to find Git using *which git* (in a bash shell) or *where git* (in a Windows shell)
+
+## My two cents 💰
+
+-   Do not create a Git repo inside your Git repo
+
+-   Git repos are not supposed to go into Google Drive, DropBox, or OneDrive, but...
+
+
+
+## Additional Tipps {.smaller}
+
+:::{.fragment}
+**Resetting**
+
+```bash
+# For when you made a mistake in your commit (like the commit message) and need to undo it without losing any changes*
+git reset HEAD^
+```
+:::
+
+:::{.fragment}
+**Reverting**
+
+```bash
+# For when you made a mistake and pushed it to a remote repository
+git revert b68cb2dc
+```
+:::
+
+:::{.fragment}
+**Stashing**
+
+```bash
+# For when you need to stash away changes for later but do not want to make a commit.
+# save current changes to stash (-u includes new files)
+git stash -u
+# apply stash changes and delete stash
+git stash pop
+```
+:::
+
+## Additional Tipps
+
+:::{.fragment}
+**checkout**
+
+```bash
+# new branch
+git checkout -b new_branch_name
+# checkout existing branch
+git checkout existing_branch_name
+# reset file to a previous version
+git checkout b68cb2dc1a53275dd779391bcac96a96c559b894 -- file_name.md
+```
+:::
+
+## Publishing Code
+
+Sharing code publicly can be very useful but poses some challenges. To avoid security issues or problems for you and other users consider the following tipps.
+
+## Publishing Code > Security
+
+Start a new git repository and copy paste your code when you publish. You might have information in your git history you don't want to share (passwords, private access tokens, "unprofessional" text or code from the early days of a project)
+
+## Publishing Code > README.md
+
+Add a "Usage" and "Contributing" section to your README.md
+
+- Add a sentence or two on the **WHY** of the project
+- Add a section "Usage" on how to install/use your project
+- Have a simple and short code example showcasing how to use the project
+- Explain the basic project structure
+
+## Publishing Code > Add a License {.smaller}
+
+- **MIT**
+  - pro: easy to understand and use
+  - con: organisations and individuals can use your code without contributing back
+- **GPLv3**
+  - pro: organisations and individuals have to contribute back to the project when your code is used in public projects
+  - con: not as easy, some organisation do not want to use software they need to contribute back to
+- **Creative Commons**
+  - pro: Allows you to customize non-commercial or commercial usage and whether it can be used without or with attribution
+  - con: the many version lead to most people not knowing them and ignoring the license
+
+
+
+
+# Lab Session II 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Get started on GitHub
+
+::: {.content-box-blue .fragment}
+-   Initialize a repo and push it to the remote.
+- Commit a change to your repo and push it.
+- Find another user and clone her repo.
+:::
+
+
+```{r}
+countdown(minutes = 20, font_size = "1.5em")
+```
+
+
+
+
+# Part III: Using Git and collaborating with GitHub {background-color="aquamarine"}
+
+## Collaboration in teams
+
+![](figs/git_teams.png)
+
+## How to collaborate? Two common workflows
+
+1)  **Shared repo workflow**
+
+-   For small projects where you are basically in the same physical space (e.g. lab with offices near each other).
+-   Be careful! You are cloning the main repository.
+-   Everyone has push and pull access to the central repo, so be careful and:
+    -   Never commit to the master directly.
+    -   Always do your work on a different branch from master.
+
+2)  **Fork and pull workflow**
+
+-   This model is used by larger teams.
+-   The "owner"/"Project Leader" of the upstream repo assigns rights to "Collaborators".
+-   Collaborators do not have push access to main (upstream) repo.
+-   Project Lead accepts Pull Requests (PRs) fro collaborators, reviews them, then merges them into main repo.
+
+::: notes
+:::
+
+## 1) Shared repo workflow
+
+![](figs/workflow_shared_repo.png)
+
+## 2) Fork and pull workflow
+
+![](figs/workflow_forking.png)
+
+## Merging branches
+
+![](figs/Git-drag-and-drop-merge.gif){width="80%"}
+
+## Two common errors
+
+-   *Push rejected.* This can happen if you have changes on the remote and on your local repo.
+    \> - *Solution:* Pull first.
+    Resolve the conflict.
+    Then try your push again.
+
+-   *fatal: not a git repository.* The command cannot be executed because the current directory is not a Git directory.
+    \> - *Solution:* initialize the repo or change directory to the repo
+
+## Some advice before we practice
+
+-   Commit early and often.
+
+-   Push to your remote on GitHub often (but not as often as you commit).
+
+-   Establish a naming convention for commits.
+
+-   Use tags to mark key steps.
+
+-   Fork and clone from foreign repos (instead of "just cloning")
+
+-   Branch of your development version, especially in teams.
+
+::: notes
+Rock climbing analogy Using a Git commit is like using anchors and other protection when climbing.
+If you're crossing a dangerous rock face you want to make sure you've used protection to catch you if you fall.
+Commits play a similar role: if you make a mistake, you can't fall past the previous commit.
+Coding without commits is like free-climbing: you can travel much faster in the short-term, but in the long-term the chances of catastrophic failure are high!
+Like rock climbing protection, you want to be judicious in your use of commits.
+Committing too frequently will slow your progress; use more commits when you're in uncertain or dangerous territory.
+Commits are also helpful to others, because they show your journey, not just the destination.
+*R Packages, Hadley Wickham (Wickham (2015))*
+:::
+
+## Now it's your turn: use the power of Git
+
+![](figs/github_scoping.jpeg)
+
+Source: illustrations by [\@allison_horst](https://twitter.com/allison_horst)
+
+::: notes
+GitHub helps us reuse GitHub helps us reuse existing work, which lets us learn and build from other people's shared experience rather than reinventing on our own.
+Plus, the existing work gets better each time someone tries it and shares their experience back.
+Whether it's code, documentation, or knowledge through posted conversations, reusing existing things can save time, resources, and frustration.
+Importantly, reuse also expands the value of existing work while celebrating the contributions of others.
+:::
+
+
+# Lab Session III 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Working with GitHub {background-color="#f3e2b4"}
+::: {.content-box-blue}
+-  [Review pull requests](https://github.com/skills/review-pull-requests)
+
+-  [Resolve merge conflicts](https://github.com/skills/resolve-merge-conflicts)
+:::
+
+::: {.fragment}
+
+
+:::
+
+::: notes
+1.  Let's get started with creating and using your [first repository](https://github.com/skills/introduction-to-github). 💩 got real! 😱
+
+### 🎁 Bonus
+-   *[Clone the repo of another course participant, commit a change and push it back](https://github.com/skills/hello-github-actions).*
+
+-   *[Automate workflows with GitHub Actions](https://github.com/skills/hello-github-actions).*
+:::
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 20, font_size = "1.5em")
+```
+
+::: notes
+Furhter tasks: <https://uoftcoders.github.io/studyGroup/lessons/git/collaboration/lesson/>.
+:::
+
+
+# See you {background-color="aquamarine"}
+
