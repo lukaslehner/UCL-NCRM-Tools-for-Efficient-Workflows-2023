@@ -1,0 +1,858 @@
+---
+title: "Tools for Efficient Workflows <br> Part 1: Automatable reports"
+subtitle: "Lukas Lehner and Maximilian Trenkmann <br> with thanks to Julia Schulte-Cloos"
+date: "UCL/NCRM, 01/12/2023"
+format:
+  revealjs:
+    toc: false
+    number-sections: false
+    theme: default
+    slide-number: c/t
+    self-contained: true
+    chalkboard: false
+    multiplex: true
+    scrollable: true
+    footer: 'Tools for Efficient Workflows'
+    smaller: false
+    preview-links: auto
+    css: styles.css
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+pacman::p_load(tidyverse, 
+               countdown)
+```
+
+# 👋🇼‌🇪‌🇱‌🇨‌🇴‌🇲‌🇪‌🙋 {background-color="#f3e2b4" .center .r-fit-text}
+
+
+## Our plan {background-color="#f3e2b4" .center}
+
+1.  **Automatable reports**
+
+2.  Version control
+
+3.  Dissemination and academic websites
+
+4.  Containerisation for reproducible environments
+
+5.  Encryption and advanced programming
+
+
+## Session 1: Automatable reports {background-color="#f3e2b4" .center .r-fit-text}
+
+. . .
+
+[Part I: Reproducible Research](#part-i-reproducible-research)
+
+. . .
+
+[Part II: Literate Programming and Executable Reports](#part-ii-literate-progamming-and-executable-reports)
+
+. . .
+
+[Part III: Authoring with `markdown` and `knitr`](#part-iii-authoring-with-markdown-and-knitr-sec-part3)
+
+. . .
+
+[Part IV: Automatable reports for advanced users](#part-iv-automatable-reports-for-advanced-users)
+
+
+
+
+# Part I: Reproducible Research
+
+
+## Why should you care about reproducible research? 
+
+🙌 Benefits yourself! 🙌 
+
+['Create a better relationship with your future self'](https://www.researchgate.net/publication/313590561_How_to_improve_your_relationship_with_your_future_self)  
+
+. . .
+
+![](./figs/reproducibilitytweet.png){width=70%}
+
+
+
+## Why should you care about reproducible research?
+
+🚀 That's the future of the social sciences! 🚀
+
+. . .
+
+- Journals and funding agency requirements, see e.g. the [Sherpa Romeo Database](https://v2.sherpa.ac.uk/romeo/) or the [Plan S Journal Checker Tool](https://journalcheckertool.org/)
+
+- Open science and data sharing
+
+- Confidence in your own work, easier collaboration and smoother workflows
+
+
+## Reproducibility vs. replication? 🤔 {.smaller}
+
+Replicability refers to situations in which a researcher obtains [new data to reach the same scientific conclusions as a previous study](https://www.sciencedirect.com/science/article/pii/S0022103113001819), whereas reproducibility refers to situations in which the original researcher's software, code, and data are used to regenerate the results. 
+
+. . .
+
+✅ **Replication standards**: guidelines, protocols, and software designed to help researchers *share, analyze, archive, preserve, distribute, catalog, translate, verify, and replicate* scholarly research data and analyses across disciplines. Includes proposals to improve the norms around data sharing and replication in scientific research. 
+
+. . .
+
+✅ **(Computational) reproducibility**: [Obtaining consistent results using the same input data, computational methods, and conditions of analysis](http://www.edge.org/response-detail/25340). [Code re-execution is a necessary, but not sufficient requirement for computational reproducibility](https://www.nature.com/articles/s41597-022-01143-6)
+
+
+## What hinders reproducible research and what can facilitate it? {.smaller}
+
+<br>
+
+:::: {.columns}
+
+:::{.incremental .column width="50%"}
+
+### Obstacles 🚧
+
+- Infrastructure and research habits
+- Hardware requirements
+- Operating systems
+- Versions of software and libraries 
+
+:::
+
+
+
+:::{.incremental .column width="50%"}
+
+### Solutions ✨
+
+- Optimised workflows (integrating coding, authoring, version control)
+- Virtual machines for computationally intense analyses
+- Containerisation 
+
+:::
+
+::::
+
+
+
+## Why Open Data? {.smaller}
+
+:::{.fragment}
+### Efficiency 🏇
+
+Science is not built upon blind trust, but on verifiability. Science as "organized skepticism" (Merton, 1947). Only when raw data and other research material is shared such organized skepticism can be implemented, and science can self-correct. One aspect of good scientific practice is **Open Data**. 
+
+:::
+
+
+:::{.fragment}
+
+### Data persistence 👴
+
+Reliable infrastructure for storage and publication (e.g., [subject-specific repositories](re3data.org), institutional repositories) 
+
+:::
+
+
+:::{.fragment}
+
+### [Funding requirements](https://www.topfactor.org/journals?factor=Data+Transparency&disciplines=Political+Science&perPage=100) 👮
+
+Plan S principle: "from 2021, scientific publications that result from research funded by public grants must be published in compliant Open Access journals or platforms." (Sherpa Romeo database; fairsharing.org)
+
+:::
+
+# Part II: Literate Progamming
+
+## Literate Programming {.smallest}
+
+:::{.fragment}
+### Communication via code 🗣️💻
+Integrate computer code with software documentation in a single document
+
+
+:::
+
+:::{.fragment}
+
+### Minimal requirements of high-quality code? 👆  
+- executes what it supposed to execute   
+- runs, no defects or problems, and runs not only under some circumstances  
+- easy to read, maintain, and extend  
+
+:::
+
+:::{.fragment}
+
+### Good practices 😇
+- directory structure 
+- relative paths: `read.csv('./data/foo.csv')`
+- compile documents in clean software sessions
+- do not set a working directory (or only globally, at the very beginning of a script) → documents should be **self-contained and portable**
+- attach information on `sessionInfo()`
+:::
+
+## How to design a well structured project directory? {.smallest .scrollable}
+
+- ['The territory of data analysis requires maps.'](https://www.researchgate.net/publication/313590561_How_to_improve_your_relationship_with_your_future_self)
+
+. . .
+
+- use a naming convention that is...
+    + **human readable**: directory names that are easy to understand for you & someone not familiar with the naming convention
+    + **machine readable**: avoid spaces
+    + **supports sorting**: sort list of input files   
+    
+. . .
+
+- directory names that contain components of the project and can be referenced in the code (e.g. `figs`, `data`, etc.)
+
+```
+- ./data
+    + `raw_data.csv`
+    + `tidy_data.csv`
+    + `codebook.txt`
+- ./analysis
+- ./figures
+    + ./interaction_plot.png
+    + ./bar_plot.png
+- ./paper
+- ./presentation
+- ./README.md
+```
+
+
+## Variable naming conventions
+
+- `snake_case`
+- `camelCase`
+
+# Command Line
+
+- Savety is important!
+- Simple Commands can do a lot of damage`rm -rf /`
+
+## arrow keys
+  - Up + Down select previously executed Commands
+  
+## cd
+  - Change Directory
+  - Relative: `cd ..\documents`
+  - Absolute: `cd C:\ProgramData`
+  
+## rm
+  - `rm file.md`
+  - `rm -r ./directory`
+  
+## mv
+  - Move
+  - `mv ./oldfilename.md ./newfilename.md`
+
+## cat
+  - Show contents of file
+  - `cat file.md`
+  
+## ls
+  - List directory contents
+  - `ls`
+
+## pwd
+  - Show current directory
+
+## Additional Tipps
+  - `>>`, `&&`, `;`, `|`
+
+## Windows Powershell
+
+- When to run as administrator
+  - To install global software
+- copy & paste
+  - Right Click
+  - `CTRL+C` & `CTRL+V` depends on enviroment
+- abort a command
+  - `CTRL+C`
+
+## Terminal
+
+- When to use sudo
+  - To install global software
+- copy & paste
+  - `CTRL+C` & `CTRL+V
+  - `CTRL+Shift+C`+CTRL+Shift+V`
+- abort a command
+  - `CTRL+C` Kill a process
+  - `CTRL+Z` Pause a process
+  
+## Programming Paradigms
+
+- **Object Oriented**: Java, C#
+- **Procedual**: C, Pascal
+- **Multi Paradigm**: Python, R
+- **Functional**: Clojure, Haskell
+- **Reactive**: React, Vue
+
+
+
+# Executable Reports
+
+## Getting started: Markdown, RMarkdown, and Quarto I {.smaller}
+
+:::{.incremental}
+- [Markdown](https://guides.github.com/features/mastering-markdown/#what) as a human readable way to style text
+
+- "Markdown is a text-to-HTML conversion tool for web writers. Markdown allows you to write using an easy-to-read, easy-to-write plain text format, then convert it to structurally valid XHTML (or HTML)." [John Gruber, founder of Markdown](https://daringfireball.net/)
+
+- R and RStudio (not the single [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment) that supports RMarkdown, Visual Studio is also a great choice) 
+
+- RMarkdown integrates R code into Markdown language through `knitr`
+
+- Quarto: extension of RMarkdown, optimised for language interoperability & CLI
+:::
+
+## Getting started: Markdown, RMarkdown, and Quarto II
+
+
+```{r rmd-framework, out.width="90%"}
+knitr::include_graphics("./figs/rmd_framework.JPG")
+```
+
+
+## Getting started: Pandoc and Lua I {.smaller}
+
+- **Pandoc**: 
+    + extremely powerful open-source document conversion tool
+    + allows for conversion between different (40+) markup languages
+    + conversion e.g., between docx, HTML, \LaTeX{}, and Markdown
+
+. . . 
+
+- [**Lua filters**](https://pandoc.org/lua-filters.html): 
+    + manipulate Pandoc Abstract Syntax Tree (AST) between writing & parsing phase
+    + powerful [collection of Pandoc Lua filters](https://github.com/pandoc/lua-filters) available open-source
+    + extremely useful to adjust the standard RMarkdown framework for scientific use cases (e.g., blinded version of manuscripts, several bibliographies, etc.)
+    
+## Getting started: Pandoc and Lua II
+
+
+```{r qmd-framework-lua, out.width="60%"}
+knitr::include_graphics("./figs/qmd_framework.JPG")
+```
+
+
+```{r ast-pandoc-lua, out.width="60%"}
+knitr::include_graphics("figs/filter-diagram-2.png")
+```
+
+
+
+## Markdown basics I {.smaller}
+
+### Text formatting and emphasis
+
+- bold text can be created with `**bold text**` or equivalently ` __bold__`
+- italic text can be created with `*italic*` or equivalently `_italic_`
+
+
+## Markdown basics II {.smaller}
+
+### Sections
+
+- `# A level-one section`
+
+- `## A level-two section with a [link](/url)`
+
+- `# An unnumbered section {-}`, or equivalently `# An unnumbered section {.unnumbered}`
+
+
+. . . 
+
+- always include blank line before a header
+- sections can be labelled and referenced by including an attribute after the header: `{#sec:introduction}`
+- if you do not specify a section id, Pandoc will automatically create one, e.g. `# Reproducible research outputs` → `{#reproducible-research-outputs}.`
+
+
+## Markdown basics III {.smaller}
+
+### Lists
+
+
+**Bullet list**
+
+* Bullet 1
+* Bullet 2
+    + Sub-bullet 1 
+    + Sub-bullet 2
+    
+    
+**Numbered lists**
+
+1. Point 1  
+2. Point 2  
+    2.1. First sub-point   
+    2.2. Second sub-point
+    
+    
+## Markdown basics IV {.smaller}
+
+### Footnotes
+
+- Include inline footnotes with `^[footnote]`
+- [Multi-paragraph footnotes](https://pandoc.org/MANUAL.html#footnotes)
+
+
+## Writing in "source" vs. "visual" mode
+
+. . . 
+
+
+...mostly a matter of taste 🍷🍺
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r}
+knitr::include_graphics("figs/source_mode.png")
+```
+
+:::
+
+::: {.column width="50%"}
+```{r visual-mode}
+knitr::include_graphics("figs/visual_mode.png")
+```
+
+:::
+
+::::
+
+
+## Narrative text & code integration I {.smaller}
+
+
+### Code chunks 
+Control how code and its products appear in your compiled report or manuscript. Code chunks are required to have unique names, e.g. `{r data2017-tidy}`
+
+. . . 
+
+
+### Chunk options
+Define conditions under which the code is evaluated and how its output is processed within the document. Most frequent options include: `eval, include, results, echo`. Comprehensive [list online](https://yihui.name/knitr/options/), in the [RMarkdown reference guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf), and for [Quarto](https://quarto.org/docs/reference/cells/cells-knitr.html). Most IDEs allow you to easily switch between different chunks.
+
+
+## Narrative text & code integration II {.smaller .scrollable}
+
+→ old-school way to specify chunk options 
+
+```{r elephant-chunk-1, out.width="20%", fig.align="center", fig.cap="Elephant in the room", echo="fenced"}
+knitr::include_graphics(path = "figs/elephant.jpg")
+```
+
+. . . 
+
+→ more recently, chunk options can be specified as comments within the actual code chunks to increase readability
+
+
+```{r elephant-chunk-2}
+#| echo: fenced
+#| out.width: '20%'
+#| fig.align: 'center'
+#| fig.cap: 'Elephant in the room'
+#| fig.alt: 'A pick elephant portraited in a room'
+knitr::include_graphics(path = "figs/elephant.jpg")
+```
+
+
+
+## Narrative text & code integration III
+
+### Referencing actual results 
+
+```{r lm-cars-eval, echo=TRUE}
+# A simple linear regression model
+fit <- lm(dist ~ speed, data = cars)
+```
+
+
+
+```{r reference-coefficient, echo=TRUE, eval=FALSE}
+
+The slope of the regression is
+`r round(fit$coefficients[2], digits = 2)`.
+
+```
+
+The slope of the regression is `r round(fit$coefficients[2], digits = 2)`
+
+
+
+## [YAML](https://en.wikipedia.org/wiki/YAML) header {.smaller}
+
+- sets **global parameters** of document
+- E.g. `output, title, author, date` 
+- YAML is a syntax (YAML Ain’t Markup Language, YAML)
+- tag-value pairs separated by colons
+- indentation is critical!
+
+
+```r
+---
+title: "Writing a reproducible research paper"
+author: "Julia Schulte-Cloos"
+date: `r lubridate::today()`
+output:
+  bookdown::pdf_document2:
+    keep_tex: yes
+    number_sections: false
+    toc: false
+documentclass: scrartcl
+---
+```
+
+
+In doubt about YAML validity? Use an [available](https://codebeautify.org/yaml-validator) [YAML linter](https://yamllint.readthedocs.io/).  
+
+
+## Parameterized reports
+
+You can render your document by relying on globally specified parameter (YAML header) that will affect how your code is evaluated, e.g. by focussing only on a subset of your data. 
+
+```
+---
+title: "My Document"
+params:
+  alpha: 0.1
+  ratio: 0.1
+---
+```
+
+# Lab Session I 👩‍💻 👨‍💻 
+
+
+## Create a reproducible document that... {#lab-session-1 .smaller background-color="#f3e2b4"}
+
+::: {.content-box-blue .fragment}
+
+- includes a title and your authoring information
+- features a footnote and an image
+- features some real literate programming (e.g., printing some calcuation within the written text)
+- can be knitted both to HTML and PDF
+:::
+
+:::{.fragment}
+### 🎁 Bonus
+Turn your Rmd file into a Quarto document (...or the other way around!) What are some of the differences?
+:::
+
+
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 15, font_size = "1.5em")
+```
+
+
+
+# Part III: Authoring with `markdown` and `knitr`
+
+## Layout {.smaller}
+
+**Table of contents**
+
+- inclusion after title page
+- add parameter in YAML header
+
+```r
+output: pdf_document
+  toc: true
+```
+
+**Paragraphs and indentation**
+- Pandoc option `indent: true` in the YAML header
+
+
+**Page margins and spacing**
+- `geometry` option in the YAML header
+
+
+## Bibliography and citations {.smallest .scrollable}
+
+### Bib-files and citations
+Include your `literature.bib` file in the YAML header (YAML key: `bibliography:`)
+Cite any entry as recorded in the `.bib`-file by calling `@palmerdata.2020` for inline citations and `[@palmerdata.2020, p.10]` for all other references. 
+
+### CSL (Citation Styles)
+If the document specifies a [csl](https://citationstyles.org/) [style](https://www.zotero.org/styles), Pandoc will convert Markdown references, i.e., `@palmerdata.2020`, to 'hardcoded' text and a hyperlink to the reference section in your document. 
+
+### Biblatex / Natbib 
+If your document specifies a citation reference package like `biblatex` or `natbib` along with the related options, pandoc will create the corresponding LaTeX commands (e.g. `\autocite`, or `\pcite`) to create the references from our Markdown references (not recommended because you are not flexible regarding output formats!)  
+
+
+## Cross-references {.smallest .scrollable}
+You can cross-reference sections, figures, tables or equations (e.g., `\@ref(fig:elephant)`).
+
+### Bookdown output formats
+Cross-referencing is possible in all output formats that are part of the `bookdown` package (e.g. `bookdown::pdf_document2`). You can reference a figure by `\@ref(fig:elephant)` where 'elephant' is the name of the code chunk that produces the figure.
+
+### Quarto
+Quarto uses a slightly different syntax: `@fig-elephant`
+
+### Colorlinks
+If you specify the `colorlinks: true` option in the YAML header, the hyperlinks to the respective figure will be colored.
+
+### Section labels
+If you do not specify a section label, Pandoc will automatically assign a label based on the title of your header. For more details, see the [Pandoc manual](https://pandoc.org/MANUAL.html#extension-auto_identifiers). If you wish to add a manual label to a header, add `{#mylabel}` to the end of the section header. 
+
+
+
+## Bibliographic reference list
+
+:::{.fragment}
+
+### Simple bibliography list
+
+```
+### References
+
+::: {#refs}
+:::
+```
+
+:::
+
+
+
+:::{.fragment}
+
+### Multiple bibliographies
+
+- **use case**: seperate bibliography in the main body of your article and the appendix
+- add the [`section-refs` Lua filter](https://github.com/pandoc/lua-filters/tree/master/section-refs)
+
+:::
+
+
+
+
+
+# Part IV: Automatable reports for advanced users
+
+
+## Single-source publishing 
+
+- one document that contains narrative text and code can be rendered to several output formats
+- e.g., blog posts, scientific manuscripts
+- ✌️ benefits? ✌️
+
+## Conditional code evaluation {.incremental .smaller}
+
+
+Advantages? 🤔
+
+. . . 
+
+
+:::: {.columns}
+
+:::{.incremental .column width="50%"}
+
+**Approach 1**  
+
++ add an option to a code chunk, e.g., `eval=knitr::is_html_output()`
++ powerful in conjunction with ["Not in format" Lua filter](https://github.com/pandoc/lua-filters/tree/master/not-in-format) `::: {.not-in-format .latex}`
++ allows you to exclude entire sections (including all relevant code chunks and text)
+
+:::
+
+:::{.incremental .column width="50%"}
+
+**Approach 2**  
+
++ specify the `execute` YAML option in a `.qmd` document
++ global `execute` options (no indentation, for any type of `format`)
++ `format` specific option (indentation, specific for each `format`)
+
+
+:::{.fragment .smaller}
+
+```
+---
+format: 
+  html:
+    toc: true
+    code-fold: true
+    execute: 
+      echo: true
+  pdf: 
+    toc: false
+    execute: 
+      echo: false
+execute: 
+    warning: false
+    message: false
+---
+```
+
+:::
+
+:::
+
+::::
+
+
+
+
+## Code chunks: reference labels {.smaller .scrollable}
+
+:::{.fragment}
+### Reference lables of code chunks
+The code chunk option `ref.label` takes a vector of chunk labels to retrieve the content of the respective chunks.
+:::
+
+:::{.fragment}
+
+### Use case: adding all code to the Appendix of a manuscript
+`ref.label` can also evaluate R code, e.g. to retrieve the code of all labels within a document (`knitr::all_labels()`). 
+
+
+```
+# Appendix: All code for this presentation
+```
+
+```
+``{r}
+#| ref.label: knitr::all_labels()
+#| echo=TRUE
+#| eval=FALSE}
+``
+```
+
+
+...or a subset of chunks that are also evaluated when rendering the document: 
+
+```
+labs <- knitr::all_labels(eval == TRUE)
+```
+
+```
+``{r}
+#| ref.label: labs
+``
+```
+
+:::
+
+## Quarto for Literate Programming {.smaller .scrollable}
+
+### Language interoperability
+
+- integration of narrative text and code in multiple programming languages (e.g., R, Python, Julia)
+- in addition to `knitr` engine, `jupyter` can be used
+
+```
+---
+title: "My Document"
+jupyter: python3
+---
+```
+
+
+### Global code chunk options within the YAML header (`execute`)
+
+`execute` key can replace a chunk that globally sets knitr options (as in the RMarkdown framework)
+
+```
+---
+title: "All code chunks in this document are not printed by default"
+execute:
+  echo: false
+---
+```
+
+## Quarto for scholarly writing {.smaller .scrollable}
+
+:::{.fragment}
+### Detailed author-related meta-data
+
+Quarto offers more control regarding the inclusion of author-related meta-data (names, affiliations, contributions to the work) that is printed as part of the title, in some output formats. See the [full documentation](https://quarto.org/docs/journals/authors.html)
+
+
+```
+author:
+  - name:
+      given: Norah
+      family: Jones
+      literal: Norah Jones
+    attributes:
+      corresponding: true
+```
+:::
+
+
+:::{.fragment}
+### Custom appendices
+
+
+You can also include the attribute `{.appendix}` after any header (at any point of your document) to delegate the respective section to the appendix. 
+
+:::
+
+
+## Quarto and figures {.smaller}
+
+
+:::{.fragment}
+
+### Cross-referencing figures  
+⚠️ Quarto uses a slightly different syntax to cross-reference figures: `@fig-elephant`
+:::
+
+
+:::{.fragment}
+
+### Side-by-Side figures  
+Quarto allows you to add a dedicated code chunk option `#| layout-ncol: 2` to your code chunks to include several figures side by side. 
+
+This is very powerful in conjunction with `#| fig-subcap:` which allows you to specify captions for each of the figure. 
+
+``` 
+#| label: fig-graphsidebyside
+#| fig-subcap: ["Caption of left figure","Caption of right figure"]
+```
+
+:::
+
+
+
+# Bonus exercises
+
+
+# Lab Session II 👩‍💻 👨‍💻 
+
+
+## Create a reproducible document that... {#lab-session-2 .smaller background-color="#f3e2b4"}
+
+::: {.content-box-blue}
+- adds a bib-file and cites some work out of it
+- features 1.5 line spacing in its PDF version
+- includes cross-references to a regression table (hint: try to work with `modelsummary`)
+:::
+
+:::{.fragment}
+### 🎁 Bonus
+Integrate two tables side-by-side, each with its own sub-caption (hint: Quarto makes it quite easy to solve this task)
+:::
+
+
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 20, font_size = "1.5em")
+```
+
+
+
+
