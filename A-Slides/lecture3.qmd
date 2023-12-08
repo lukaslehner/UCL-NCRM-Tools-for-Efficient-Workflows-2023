@@ -1,0 +1,273 @@
+---
+title: "Tools for Efficient Workflows <br> Part 3: Version control for collaboration"
+subtitle: "Lukas Lehner and Maximilian Trenkmann"
+date: "UCL/NCRM, 08/12/2023"
+format:
+  revealjs:
+    toc: false
+    number-sections: false
+    theme: default
+    slide-number: c/t
+    self-contained: true
+    chalkboard: false
+    multiplex: true
+    scrollable: true
+    footer: "Tools for Efficient Workflows"
+    smaller: false
+    preview-links: auto
+    css: styles.css
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+## Our plan {.smaller}
+
+
+```{r setup}
+pacman::p_load(
+  knitr,
+  tidyverse, 
+  countdown)
+```
+
+1.  Automatable reports
+
+2.  **Version control**
+    - **for collaboration**
+
+3.  Dissemination and academic websites
+
+4.  Containerisation for reproducible environments
+
+5.  Encryption and advanced programming
+
+## What did we do so far?
+
+-   **Automatable reports**
+
+-  **Version control**
+
+::: notes
+:::
+
+## Expertise and interests
+
+![](./figs/survey_pre_course.jpg){width=100%}
+
+
+
+# Session 3: Collaboration using version control {background-color="aquamarine"}
+
+-   Part I: Shared repo workflow
+-   Part II: Fork and pull workflow
+-   Part III: Resolving issues
+
+# Recap last session {background-color="aquamarine"}
+
+## We discussed in the last session
+
+-   **Version control**
+    -   **Lectures:** Conceptional underpinning of modern version control tools such as Git.
+    -   **Lab exercises:** Familiarize ourselves with the Git version control system and key Git operations, including committing, branching, and merging.
+
+::: notes
+Collaboration in teams on coding challenges to f
+:::
+
+# Today: Collaboration in teams using Git
+
+## Make careful use of your skillset
+
+![](figs/github_harness.jpeg)
+
+Source: illustrations by [\@allison_horst](https://twitter.com/allison_horst)
+
+::: notes
+GitHub enables new frontiers for open science as we collaborate, share, and publish more easily.
+And, it is critical to continually question who is safe to participate with these tools.
+Who is not yet participating, and why?
+Barriers to access include past exclusion, skills, and support.
+:::
+
+## Further Resources
+
+-   [Happy Git](https://happygitwithr.com/) intro for data science
+
+-   [GitHub Skills](https://skills.github.com/) *replaced [GitHub Learning Lab](https://lab.github.com/) from 1 Sept 2022.*
+
+-   GitHub pro is free for students (Sign up for [GitHub Student Developer Pack](https://education.github.com/pack#offers)).
+
+-   [GitHub Teacher Toolbox](https://education.github.com/teachers) is free for course instructors.
+
+-   [Code and Data for the Social Sciences: A Practitioner's Guide](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) by Matthew Gentzkow and Jesse M. Shapiro.
+
+::: notes
+-   [1h Introduction](https://lab.github.com/githubtraining/introduction-to-github)
+
+-   [Oxford ReproducibiliTea](https://reproducibilitea.org/)
+
+-   [Berkeley Initiative for Transparency in the Social Sciences](https://www.bitss.org/)
+:::
+
+
+
+#  Part I: Shared repo workflow
+- Single branch workflow
+- Trunk based workflow
+
+![](figs/workflow_shared_repo.png)
+
+# Lab Session I 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+- Single branch workflow
+  - All changes are made to a single branch
+- Trunk based workflow
+  - Changes are made to short lived feature branches that are merged back into a main branch.
+
+
+## Single branch workflow: (Exercise 1)
+
+- Clone the [training repository](https://github.com/lukaslehner/Training_Repo_for_Tools_for_Efficient_Workflows_2023)
+- Add an image of the icon of your favorite programming language to the subsection with your name in "/A-Programming/Languages.qmd".
+- Render the document to html to test whether it displays the image correctly.
+- Commit your changes.
+- Push your commit.
+
+```{r}
+countdown(minutes = 15, font_size = "1.5em")
+```
+
+
+## Single branch workflow: (Exercise 2)
+
+- Add a table to "\A-Programming\All-Languages.qmd" that includes all programming languages that you are able to use.
+
+
+```{r}
+countdown(minutes = 15, font_size = "1.5em")
+```
+
+::: notes
+- merge conflict IF people 
+- während leute daran arbeiten pushen wir hoch und ändern namen, dann kommt es bei allen anderen zu merge conflict
+:::
+
+## Trunk based workflow
+
+- Clone the repo again.
+- Branch off a another branch called "feature-YOURNAME".
+- Add your own automatable report document to the folder B-Reports.
+- Add some of the image files in "D-Figures" to your automatable report.
+- Commit and publish the branch.
+- Go to Github and create a pull request.
+
+```{r}
+countdown(minutes = 20, font_size = "1.5em")
+```
+
+::: notes  
+  - Wir aktualisieren Image in der Zwischenzeit
+:::
+
+## Trunk based workflow
+
+- Switch branch to main now that your changes have been merged
+- Render your report
+
+#  Part II: Fork and pull workflow
+
+![](figs/workflow_forking.png)
+
+Changes are made in a separate repository and if necessary pulled into the original repository
+
+## Create your academic CV with Rmd
+
+-   The [vitae R package](https://github.com/mitchelloharawild/vitae)
+-   [datadrivenvc package](http://nickstrayer.me/datadrivencv/) by *Nick Strayer*
+-   Markdown for Latex and HTML template (my CV) based on templates by [*Alex Albright*](https://github.com/apalbright/CV) and [*Steven Miller*](https://github.com/svmiller/svm-r-markdown-templates)
+
+# Lab Session II 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Forking Exercise
+
+- Fork the repository
+- Start to complete the content of the CV
+- Notice any updates to the main repository
+
+```{r}
+countdown(minutes = 20, font_size = "1.5em")
+```
+
+::: notes
+- Other examples for this workflow would include forking a repo with course material or a tepmlate for an academic website.
+:::
+
+
+## Fork and Pull Exercise
+
+- Add your name to the contributors in README.md
+- Send a pull request to have your name included in the original repository.
+
+```{r}
+countdown(minutes = 10, font_size = "1.5em")
+```
+
+#  Part III: Resolving issues
+
+## Merge Conflicts
+
+- use .gitignore to make merging easier
+- commit, push and pull often
+
+## Large scale Issues and Changes
+
+- Create a new Repository
+- Copy Paste in Version A, then create a commit
+- Copy Paste in Version B
+  - Copy paste in one folder at a time.
+  - Create a new commit for each folder.
+
+# Lab Session III 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Dealing with pull requests and merge conflicts
+
+-  [Review pull requests](https://github.com/skills/review-pull-requests)
+
+-  [Resolve merge conflicts](https://github.com/skills/resolve-merge-conflicts)
+
+```{r}
+countdown(minutes = 35, font_size = "1.5em")
+```
+
+## Recap the basic git steps (bonus)
+
+- [Bonus exercise](https://github.com/skills/introduction-to-github)
+
+```{r}
+countdown(minutes = 40, font_size = "1.5em")
+```
+
+
+# Outlook {background-color="aquamarine"}
+
+## Outlook: our plan
+
+-   **Dissemination and academic websites**
+    -   **Lectures:** we will discuss how to combine executable reports (session 1) with version control (sessions 2 and 3) to effectively disseminate our findings online.
+    -   **Lab exercises:** we will use GitHub Pages, and Quarto to create their own academic website.
+
+::: notes
+using Git and GitHub pages to create our own website
+    -   Visconti. 2016. Building a static website with Jekyll and GitHub Pages. Programming Historian. <https://doi.org/10.46430/phen0048>
+    -   The Carpentries: Building Websites with Jekyll and GitHub. <https://carpentries-incubator.github.io/jekyllpages-novice/>
+:::
+
+## Outlook: recommended readings
+
+   -   Williams. 2020. Building an academic Website. <https://jayrobwilliams.com/posts/2020/06/academicwebsite/>
+   -   Turner et al. 2020. Open Code and Software: a Primer from UKRN. <https://doi.org/10.31219/osf.io/qw9ck>
+   -   Spitschan et al. 2020. Preprints: a Primer from UKRN. <https://doi.org/10.31219/osf.io/m4zyh>
+
+# See you {background-color="aquamarine"}
+
