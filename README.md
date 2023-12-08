@@ -2,6 +2,7 @@
  This repo includes the course material for the 2023 course Tools for Efficient Workflows (GitHub, Markdown, Docker) at UCL and the NCRM.
 
  - [Syllabus](https://www.ncrm.ac.uk/training/show.php?article=13069)
+ - [Training repository](https://github.com/lukaslehner/Training_Repo_for_Tools_for_Efficient_Workflows_2023)
 
 ## Schedule
 
