@@ -1,0 +1,665 @@
+---
+title: "Tools for Efficient Workflows <br> Part 4: Dissemination and academic websites"
+subtitle: "Lukas Lehner and Maximilian Trenkmann"
+date: "UCL/NCRM, 01/12/2023"
+format:
+  revealjs:
+    toc: false
+    number-sections: false
+    theme: default
+    slide-number: c/t
+    self-contained: true
+    chalkboard: false
+    multiplex: true
+    scrollable: true
+    footer: "Tools for efficient workflows, smooth collaboration and optimised research outputs"
+    smaller: false
+    preview-links: auto
+    css: styles.css
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+## Our plan for the week {.smaller}
+
+```{r setup}
+pacman::p_load(
+  knitr,
+  tidyverse, 
+  countdown)
+```
+
+1.  Automatable reports
+
+2.  Version control
+
+3.  **Dissemination and academic websites**
+
+4.  Containerisation for reproducible environments
+
+5.  Encryption and advanced programming
+
+## What did we do so far?
+
+-   **Automatable reports**
+
+-   **Version control**
+
+    -   **Lectures:** Conceptional underpinning of modern version control tools such as Git.
+    -   **Lab exercises:** Collaboration in teams on coding challenges to familiarize ourselves with the Git version control system and key Git operations, including branching, merging, forking, and resolving merge conflicts.
+
+### Why Git? Summary
+
+::: fragment
+1)  Streamline your work
+2)  Support others and yourself
+3)  Reuse your work
+4)  Contribute earlier
+5)  Fail safely
+:::
+
+::: notes
+:::
+
+## General advice before we start
+
+-   Register on [Stackoverflow](https://stackoverflow.com/).
+
+-   Use Git to [track changes in your LaTeX file](https://stackoverflow.com/questions/6188780/git-latex-workflow).
+
+-   Split large text documents by section into different modules.
+    Adopt a modular workflow for [LaTeX](https://en.wikibooks.org/wiki/LaTeX/Modular_Documents) and [Markdown](https://louis-dr.github.io/mmd-guide.html).
+
+# Session 4: Dissemination and academic websites {background-color="aquamarine"}
+
+-   Part I: Using RMarkdown and Quarto to create your website
+-   Part II: Deployment: using Git and GitHub Pages to host your website
+-   Part III: Features to upgrade your website incl. tracking traffic with Google Analytics and Search Console
+
+## Our plan for today
+
+-   **Dissemination and academic websites**
+    -   **Lectures:** we will discuss how to combine executable reports (day 1) with version control (day 2) to effectively disseminate our findings online.
+    -   **Lab exercises:** we will use GitHub Pages and Jekyll to create our own academic website.
+
+::: notes
+using Git and GitHub pages to create our own website
+:::
+
+## Any questions from the readings?
+
+-   Compulsory reading:
+    -   Visconti. 2016. Building a static website with Jekyll and GitHub Pages. Programming Historian. <https://doi.org/10.46430/phen0048>
+    -   Williams. 2020. Building an academic Website. <https://jayrobwilliams.com/posts/2020/06/academicwebsite/>
+-   Suggested reading:
+    -   The Carpentries: Building Websites with Jekyll and GitHub. <https://carpentries-incubator.github.io/jekyllpages-novice/>
+    -   Turner et al. 2020. Open Code and Software: a Primer from UKRN. <https://doi.org/10.31219/osf.io/qw9ck>
+    -   Spitschan et al. 2020. Preprints: a Primer from UKRN. <https://doi.org/10.31219/osf.io/m4zyh>
+
+# Part I: Creating our first website using a static site generator for RMarkdown or Quarto {background-color="aquamarine"}
+
+## Web: Terminology (1): basics
+
+-   **Website**
+
+-   **Webpage**
+
+-   **Homepage**
+
+ 
+
+-   **URL**
+
+-   **Domain**
+
+-   **Subdomain**
+
+-   **Subsite**
+
+::: notes
+1)  Explain to your neighbor
+
+2)  Collect responses from class
+
+3)  Clarify
+:::
+
+## Web: Terminology (1): basics
+
+-   **Website:** a set of related web pages located under a single domain name
+-   **Webpage:** a single hypertext document on the World Wide Web
+-   **Homepage:** the introductory webpage of a website
+
+::: fragment
+☝️ Careful: just because you know, it does not mean that everyone does.
+:::
+
+-   **URL:** the address of a web page.
+-   **Domain:** a subset of the internet with addresses sharing a common suffix, or under the control of a particular organization or individual. E.g. <https://github.com/>
+-   **Subdomain:** an internet domain which is part of a primary domain. E.g. <https://jschultecloos.github.io/>.
+-   **Subsite:** a location within a website. E.g. <https://jschultecloos.github.io/research/>.
+
+## Web: Terminology (2): tools
+
+-   **Server**
+-   **Web server**
+-   **HTTP**
+-   **HTTPS**
+
+ 
+
+-   **HTML**
+-   **CSS**
+-   **JavaScript**
+
+## Web: Terminology (2): tools
+
+-   **Server:** a software and hardware that provides a service to another computer program and its user, also known as the client. It can be used to host data and execute programs with shared access by multiple clients.
+-   **Web server:** a software and hardware that uses protocols, such as HTTP or HTTPS to respond to client requests made over the World Wide Web. This is where we host our website to be accessible on the web.
+-   **HTTP:** Hypertext Transfer Protocol is the set of rules (protocols) for transferring files over the web.
+-   **HTTPS:** Hypertext Transfer Protocol Secure is a combination of HTTP with the Secure Socket Layer (SSL)/Transport Layer Security (TLS) protocol to make transfer over the web more secure.
+
+ 
+
+-   **HTML:** HyperText Markup Language defines the meaning and structure of web content. It is the most basic building block of the Web.
+-   **CSS:** Cascading Style Sheets is a computer language for laying out and structuring web pages (written for instance in HTML).
+-   **JavaScript:** a text-based programming language that is used to make web pages interactive (contrary to static websites).
+
+## Create your academic website - what is the easiest way?
+
+::: fragment
+-   Departmental webpage.
+
+-   Wordpress: <https://wordpress.com/>.
+
+-   Google sites: <https://sites.google.com/new>.
+:::
+
+::: fragment
+-   Pretty standard nowadays. So what can you do if you fancy belonging to the 😎 kids?
+:::
+
+## Create your academic website (and CV, book, etc.)
+
+-   GitHub Pages: you get a free domain to host your website on `github.io`.
+-   Your GitHub repository: is as your server.
+-   Markdown: .md files contains your content.
+-   Static site generator, for instance [Jekyll](https://jekyllrb.com/) or [HUGO](https://gohugo.io/):\
+    takes your Markdown files and builds an HTML website.\
+    Jekyll is already built-into GitHub pages.
+-   Choose a theme, for instance [Minimal Mistakes](https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/) to begin with.
+
+ 
+
+→ No knowledge of web programming (HTML, CSS, JavaScript,...) required.\
+
+*Disclaimer:* but some bits may still be helpful later on to customise your work.
+
+## Looking for an even easier way while maintaining lots of options for customization?
+
+-   RMarkdown and Quarto are now optimised for [website generation](https://quarto.org/docs/websites/). 😎 
+
+-   It includes its own static website generator for local preview.
+
+-   Try it out following the basic [documentation](https://quarto.org/docs/websites/).
+
+
+### R Markdown even has an inbuilt site generator
+
+The R Markdown package provides a simple built-in site generator.
+It assumes all Rmd documents are under a flat directory (i.e., no pages under subdirectories).
+It has fewer features compared to Jekyll or Hug o(see here for [details](https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html)).
+
+## Remember YAML frontmatter? - we include it in each page (each (R)md document)
+
+    ---
+    layout: page
+    title: Research
+    menu: main
+    permalink: /research/
+    ---
+
+
+# Lab Session I 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+
+## Lab Session I, a) Use R Markdown's site generator to create a simple example website {background-color="#f3e2b4"}
+
+Let's use the easiest static site generator to create a basic website based on R Markdown that is rendered to html.
+
+Our website will include two pages (Home and About) and a navigation bar to switch between them.
+
+First, we need a configuration file `_site.yml`:
+
+    name: "my-website"
+    navbar:
+      title: "My Website"
+      left:
+        - text: "Home"
+          href: index.html
+        - text: "About"
+          href: about.html
+
+Then two Rmd files, `index.Rmd`:
+
+    ---
+    title: "My Website"
+    ---
+
+    Welcome to my Website!
+
+and `about.Rmd`:
+
+    ---
+    title: "About This Website"
+    ---
+
+    This is my bio...
+
+The minimum requirement for any R Markdown website is that it has an `index.Rmd` file as well as a `_site.yml` file.
+
+Now, execute the `rmarkdown::render_site()` function from within the directory containing the website.
+
+Magic!
+The following will occur:
+
+All of the `*.Rmd` and `*.md` files in the root website directory will be rendered into HTML.
+
+The generated HTML files and any supporting files (e.g., CSS and JavaScript) are copied into an output directory (`_site` by default).
+
+Congratulations, you have created your first static website using R Markdown.
+The HTML files within the `_site` directory are now ready to deploy as a standalone static website.
+
+::: fragment
+### 🎁 Bonus
+
+- *Create a `research.Rmd` webpage and fill it with content. Don't forget t to add the new webpage to the navigation bar in the `_site.yml` file*
+
+- *Use Quarto to generate a [local website](https://quarto.org/docs/websites/).*
+:::
+
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 30, font_size = "1.5em")
+```
+
+::: notes
+[Detailed instructions](https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html).
+:::
+
+
+
+# Part II: Deployment: using Git and GitHub Pages to host your website  {background-color="aquamarine"}
+
+## Markdown files for GitHub Website
+
+- We use Markdown documents for content
+
+-   Set global parameters of the document in the YAML header
+
+-   Include general information in the \_config.yml file
+
+-   Allow you to adjust html and css - but you do not need to!
+
+## GitHub websites - basics
+
+-   Static website:
+
+    -   the website only consists of static files such as HTML, CSS, and images, etc.
+    -   It is just one folder of static files.
+    - You can also use JavaScript to make integrate dynamic elements.
+
+-   You can host the website on any web server.
+
+-   The website does not require server-side scripts (such as PHP or databases by contrast to WordPress).
+
+-   Generated from R Markdown documents.
+
+    -   Benefits of dynamic documents
+
+-   Relies on a static website generator like Hugo, Jekyll, or rmarkdown's default site generator.
+
+## Deployment
+
+You have several options, for instance: - Netlify - GitHub Pages - Travis + GitHub - GitLab Pages
+
+::: notes
+Since the website is basically a folder containing static files, it is much easier to deploy than websites that require dynamic server-side languages such as PHP or databases.
+All you need is to upload the files to a server, and usually your website will be up and running shortly.
+:::
+
+### Netlify - the easiest option
+
+It provides a free plan that actually has quite a lot of useful features.
+If you have no experience in publishing websites before, just log in using your GitHub account or other accounts, drag the public/ folder built by blogdown for your website to the Netlify page, and your website will be online in a few seconds with a random subdomain name of the form random-word-12345.netlify.com provided by Netlify (you can customize the name).
+
+### GitHub Pages -
+
+GitHub Pages is a static site hosting service that takes HTML, CSS, and JavaScript files straight from a repository on GitHub, optionally runs the files through a build process, and publishes a website.
+But it requires use of markup language (Markdown) and occassionally command-line tools.
+
+::: notes
+GitHub officially supports Jekyll but you can actually publish any static HTML files on GitHub Pages, even if they are not built with Jekyll but with Hugo instead.
+
+Pro: 1) GitHub Project Pages allows you to have project websites in separate repositories, such as the one for our course.
+You may have two independent websites https://username.github.io/proj-a/ and https://username.github.io/proj-b/, corresponding to GitHub repositories username/proj-a and username/proj-b.
+For Netlify, you can use a workaround by associating each repository separately with a subdomain name with Netlify but you cannot use subpaths in the URL.
+
+Cons: 1) Redirecting URLs is awkward with GitHub Pages but much more straightforward with Netlify.33 This is important especially when you have an old website that you want to migrate to Hugo.
+2) Contrary to Netlify, GitHub pages cannot generate a unique website for preview when a GitHub pull request is submitted to your GitHub repository.
+This is extremely useful when someone else (or even yourself) proposes changes to your website
+:::
+
+# Lab Session II a) 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Lab Session II a) 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+1)  Go on GitHub and create a new public repository named *username*.github.io, for instance: *lukaslehner.github.io*.
+
+2)  Go to the settings, scroll down to the GitHub Pages section, and press *Choose a theme*.
+    **Attention:** GitHub recently chaned these settings.
+    If you cannot see this option you need to manually create your `_config.yml` file and include one line: `theme: jekyll-theme-minimal`.
+
+3)  Pick a theme of your choice.
+    Personally, I like *jekyll-theme-minimal*.
+
+4)  Create some content for your new webpage using Markdown.
+    Simply enter the Markdown content into README.md.
+
+5)  Enter a commit comment and click on *Commit changes*.
+    Check out your webpage on http://*username*.github.io/.
+
+::: notes
+Live demonstration
+
+-   [Detailed instructions](https://pages.github.com/). Choose *Project site*.
+-   [Detailed instructions](https://pages.github.com/). Choose *User or organization site*.
+:::
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 15, font_size = "1.5em")
+```
+
+## Congrats
+
+::: fragment
+Congrats!
+You have created your own website!
+🥳
+:::
+
+::: fragment
+But it looks pretty 💩.
+So what can we do?
+:::
+
+::: fragment
+💡 This is where static site generators come in!
+
+- comit and push your locally cretaed website from lab session I to your GitHub pages repository.
+:::
+
+::: fragment
+There is also another quick fix: simply add a short \`\`\`\_config.yml´´´ file to your repository with the following content:
+
+    theme: jekyll-theme-minimal
+
+Or follow [these instructions](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/adding-a-theme-to-your-github-pages-site-using-jekyll) (that propose a slightly different way).
+:::
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 20, font_size = "1.5em")
+```
+
+## Lab Session II b) 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+You can also use your repositories as project webpages.
+
+1)  Create a new repository.
+    This time you can choose the name by your discretion.
+
+2)  This time, we want to add content locally: Clone the repository.
+    Click the "Set up in Desktop" button.
+    When the GitHub desktop app opens, save the project.
+
+3)  Create an index.md and add it to your project.
+    Include a few short lines about yourself using Markdown syntax.
+
+4)  Commit & publish.
+    Open GitHub Desktop, commit your changes, and press the publish button.
+
+-   Check out your webpage on http://*username*.github.io/*repository*.
+
+::: notes
+💩 got real!
+😱
+:::
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 15, font_size = "1.5em")
+```
+
+
+## Bonus Lab Session: Quarto for static site generation 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+- Use the [Quarto static site generator](https://quarto.org/docs/websites/).
+- Create your Quarto webste locally.
+- Deploy it to your GitHub repository.
+- Quarto offers more options for customization of your website than RMarkdown.
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 40, font_size = "1.5em")
+```
+
+
+
+# Part III: Web analytics {background-color="aquamarine"}
+
+::: notes
+-   In this course, we use *Jekyll* with *GitHub Pages*
+:::
+
+
+## Implement HTTPS on your website
+
+HTTPS adds a layer of encryption to your site to secure communication.
+You can enforce HTTPS for your GitHub Pages site to transparently redirect all HTTP requests to HTTPS.
+In the past five years most websites have switched from http to the more secure https.
+
+Secure your GitHub Pages site with HTTPS:
+
+1)  On GitHub, navigate to your site's repository.
+
+2)  Under your repository name, click *Settings*.
+
+3)  In the "Code and automation" section of the sidebar, click *Pages*.
+
+4)  Under "GitHub Pages," select *Enforce HTTPS*.
+
+## Using a custom domain
+
+-   GitHub Pages supports using custom domains.
+
+-   Subdomains are configured with a CNAME record through your DNS provider.
+
+## Google Search Console
+
+-   Monitor Google Searches for your website (when, what, who)
+
+-   Understand which content reasonates with your readers
+
+-   Improve your Google Search ranking
+
+-   Get alerts on issues to fix your site
+
+::: notes
+Show Google Search Console online.
+:::
+
+## Web analytics service
+
+-   Google Analytics is the most widely used web analytics service.
+
+-   It track your website traffic and helps you understand
+
+    -   the demographics of your users,
+    -   how your users find your website,
+    -   your users browsing behaviour on your website,
+    -   your website's performance, such as loading speed of each webpage.
+
+-   As a side: track who copies your website.
+    😉
+
+::: notes
+Show **inspect** option in Chrome.
+
+Show Google Analystics in Chrome.
+:::
+
+## Resources
+
+-   [blogdown](https://bookdown.org/yihui/blogdown/)
+
+-   [bookdown](https://bookdown.org/) is an open-source R package that facilitates writing books and long-form articles/reports with R Markdown.
+
+# Lab Session III 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## 🎁 Bonus: Using tools to upgrade your Website
+
+1)  Submit your website to the [Google Search Console](https://search.google.com/search-console/about).
+
+2)  Set up [Goolge Analytics](https://analytics.google.com/analytics/web/) for your GitHub pages website.
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 45, font_size = "1.5em")
+```
+
+::: notes
+3)  Check out extended functionalities with [blogdown](https://bookdown.org/yihui/blogdown/).
+:::
+
+# Recap {background-color="aquamarine"}
+
+## We discussed in this session
+
+-   **Dissemination and academic websites**
+    -   **Lectures:** we have discussed how to combine executable reports (day 1) with version control (day 2) to effectively disseminate our findings online.
+    -   **Lab exercises:** we have used GitHub Pages and Jekyll to create our own academic website.
+
+::: notes
+using Git and GitHub pages to create our own website
+:::
+
+
+## Further Resources
+
+-   [Instructions to recap what we learned today and set up your first Blog on GitHub pages](https://github.com/skills/github-pages).
+
+# Outlook {background-color="aquamarine"}
+
+## Outlook: our plan for next week
+
+-   **Containerisation for reproducible environments**
+    -   **Lectures:**  will cover the key idea underlying containerization to bundle software, libraries and configuration files with a particular focus on recent advances in academia to ship fully reproducible virtual environments as a part of scientific replication packages
+    -   **Lab exercises:** we will use Docker to containerize their projects to ensure full software and code reproducibility. Participants will learn how to write a Dockerfile that is seamlessly integrated with the most important R packages, pin their specific library versions and prepare their containers for dissemination. 
+
+::: notes
+:::
+
+## Outlook: our plan for next week - readings
+
+-   Compulsory reading:
+    -   Lopp. 2019. Reproducible Environments. R Views. <https://rviews.rstudio.com/2019/04/22/reproducibleenvironments/>
+    -   Boettiger, Carl, 2015. An introduction to Docker for reproducible research. Operating systems review, 49(1), pp.71--79. <https://doi.org/10.1145/2723872.2723882>
+    -   Sangole. 2021. Reproducible Work in R. <https://towardsdatascience.com/reproducible-work-in-re7d160d5d198>
+-   Suggested reading:
+    -   R-bloggers. 2021. Setting up a transparent reproducible R environment with Docker + renv. <https://www.rbloggers.com/2021/08/setting-up-a-transparent-reproducible-r-environment-with-docker-renv/>
+    -   Ihle, Jaquiery, Robinson, Gibson, George. 2021. Community call: reproducible environment. Reproducible Research Oxford. <https://osf.io/xp9zn/>
+    -   Nüst D, Sochat V, Marwick B, Eglen SJ, Head T, Hirst T, et al. 2020- Ten simple rules for writing Dockerfiles for reproducible data science. PLoS Comput Biol 16(11): e1008316. <https://doi.org/10.1371/journal.pcbi.1008316>
+
+
+
+# See you next week {background-color="aquamarine"}
+
+
+
+
+# Appendix: Other Static Site Generators beyond RMarkdown and Quarto
+
+### Jekyll
+
+Jekyll is the default static site generator used on GitHub pages.
+It is a blog-aware, site generator written in *Ruby*.
+It takes raw text files, runs it through a renderer and produces a publishable static website.\
+
+With Jekyll you do not need to install any tools for site generation since it is in-built in GitHub pages.
+You still want to install them to preview your site locally.
+
+You can always add a `.nojekyll` file to your site's root directory to disable Jekyll, for instance if you woud like to use a different site generator, such as Hugo.
+If you do not know how to do this, you can also use the R function `file.create('.nojekyll')` to create this file.
+
+### Hugo
+
+Hugo is a static site generator written in Go.
+Created in 2013, it is a bit newer than Jekyll and arguably the fastest framework for static site generation.
+But Hugo is more *opinionated* than Jekyll.
+  With Hugo, you need to render your website locally before pushing it online.
+
+::: notes
+Jekyll vs Hugo... I prefer Jekyll for flexibility but others prefer Hugo for speed.
+Both have large theme templates.
+
+No installation of tools required for site generator online.
+:::
+
+## Jekyll - basic commands 
+
+### for installation
+
+    - gem install bundler jekyll
+
+    - jekyll new *my-awesome-site*
+
+    - cd *my-awesome-site*
+
+-   More [useful commands](https://jekyllrb.com/docs/usage/).
+
+-   Visual Studio Code has various [jekyll related plugins](https://marketplace.visualstudio.com/search?term=tag%3Ajekyll&target=VSCode&category=All%20categories&sortBy=Installs).
+
+### for local preview
+
+-   Start local site: Type `bundle exec jekyll serve` in the command line
+-   Visit local site: Open **localhost:4000/yourwebfoldername/** in a web browser (e.g. localhost:4000/JekyllDemo/). Don't forget the trailing slash!
+
+
+# Lab Session IV 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Installing and using a more advanced static site generator for local preview {background-color="#f3e2b4"}
+
+::: {.content-box-blue .fragment}
+1)  Install the pre-requirements for Jekyll <https://jekyllrb.com/docs/installation/>
+
+-   Ruby
+-   RubyGems
+-   CGC and Make
+
+2)  Install Jeyll and bundler gems <https://jekyllrb.com/docs/>
+
+3)  Use Jekyll to build and preview your website locally.
+    [Instructions](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll).
+
+-   (Alternatively, you could install [Hugo](https://gohugo.io/getting-started/installing/) based on Go.)
+:::
