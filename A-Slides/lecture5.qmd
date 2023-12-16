@@ -1,0 +1,481 @@
+---
+title: "Tools for Efficient Workflows <br> Part 5: Containerisation for reproducible environments"
+subtitle: "Lukas Lehner and Maximilian Trenkmann <br> with thanks to Julia Schulte-Cloos"
+date: "UCL/NCRM, 01/12/2023"
+format:
+  revealjs: 
+    toc: false
+    number-sections: false
+    theme: default
+    slide-number: c/t
+    self-contained: true
+    chalkboard: false
+    multiplex: true
+    scrollable: true
+    footer: "Tools for Efficient Workflows"
+    smaller: false
+    preview-links: auto
+    css: styles.css
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+## Our plan for the week {.smaller}
+
+```{r setup}
+pacman::p_load(
+  knitr,
+  tidyverse, 
+  countdown)
+```
+
+1.  Automatable reports
+
+2.  Version control
+
+3.  Dissemination and academic websites
+
+4.  **Containerisation for reproducible environments**
+
+5.  Encryption and advanced research infrastructure
+
+## What did we do in the last part?
+
+-   **Dissemination and academic websites**
+
+::: notes
+:::
+
+
+# Part I: Why Containers? {background-color="aquamarine"}
+
+## Well, it runs on my machine...
+
+```{r, out.width="50%", fig.align = "center"}
+
+knitr::include_graphics("figs/works_on_my_machine.png")
+
+```
+
+## What are containers? 📦
+
+:::{.fragment .content-box-blue}
+### Packaging tool 
+- package up your code with all of its dependencies
+- ...in order to run code later, share it with someone else for collaboration, or archive code and software environment ('replication data') 
+:::
+
+## What are containers? II {.smaller}
+
+:::{.fragment}
+- implementations of operating system-level virtualization
+- most popular & most common: Docker (but see also [other container implementations](https://docs.sylabs.io/guides/3.5/user-guide/index.html))
+:::
+
+:::{.fragment}
+> ["A container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another."](https://web.archive.org/web/20210609145942/https://www.docker.com/resources/what-container)
+:::
+
+:::{.fragment}
+- all dependencies handled 🤹🏼‍♂️
+- no differences across time, users' OS, or software implementations 
+:::
+
+## Containers and reproducibility 
+
+
+
+### [Computational reproducibility affected by...](https://hdsr.mitpress.mit.edu/pub/f0obb31j/release/3) 
+
+
+:::{.fragment}
+- documentation of computational workflow used to obtain results
+- accessibility of precise versions of software and data used
+- sufficient details about the **computational environment used**
+- **long-term accessibility** of computational research output
+:::
+
+
+
+## Containers in computational social science {.smaller}
+
+:::{.fragment}
+- constantly evolving development of programming languages
+- "pin" packages (e.g., with `renv`, `checkpoint`)
+- but: [breaks between software versions](https://blog.revolutionanalytics.com/2020/04/r-400-is-released.html)
+- multiple base versions simultaneously on local machines?
+:::
+
+
+:::{.fragment}
+
+### Use cases
+
+1) package a development environment for someone else to run and use
+2) package a finished replication package for archiving, reproducibility, and reproduction
+
+:::
+
+## A brief history of Docker
+
+- since 1970s: concept of containerisation (Linux Containers)
+- released as open source platform in March 2013 
+- first open source containerization system 
+- independent of the operating system (Linux containers run on other OS)
+- today: most popular open-source containerization platform 
+
+# Docker Hub
+
+- share your image with colleagues.
+
+- faster than sharing only the Dockerfile as the image does not need to be rebuilt.
+
+
+# Part II: Getting Started with Docker {background-color="aquamarine"}
+
+## Ingredients of Docker {.smaller}
+
+:::: {.columns}
+
+:::{.incremental .column width="50%"}
+
+### Images
+
+- template for creating environment that you want to snapshot 
+- start with a **base image**, add further layers
+- powerful for R community: [rocker base images](https://hub.docker.com/u/rocker) 
+- `FROM rocker/tidyverse:4.0.0`
+
+:::
+
+
+:::{.incremental .column width="50%"}
+
+### Containers
+
+:::{.fragment}
+- running instance of an image
+- unique names and tags  
+- ephemeral (not persistent)  
+:::
+
+
+:::{.fragment}
+```
+# list all containers
+docker ps
+# start container
+docker run [OPTIONS] my_image_name:latest
+# terminante container
+docker kill my_container_id
+```
+:::
+
+:::
+
+::::
+
+
+
+
+## Building Containers
+
+### Dockerfile
+- [plain-text instructions to automatically make images](https://docs.docker.com/engine/reference/builder/)
+- lists all steps for creating your Docker container: **layers** 
+- each Docker command is a layer
+- **must** begin with a `FROM` instruction (exception: ARGS)
+
+```
+FROM rocker/tidyverse:4.0.0
+```
+
+### [Build Command](https://docs.docker.com/engine/reference/commandline/build/)
+
+
+```
+docker build --tag my_awesome_container:latest .
+```
+
+
+
+
+
+## Running Containers {.smaller}
+
+
+- `docker run` (short for `docker pull` and `docker run`)
+
+
+```
+docker run -ti rocker/r-base R
+```
+
+- gets R base image from `rocker`
+- runs the container in interactive mode `-ti`
+- opens an R Terminal inside the container `R`
+
+
+
+
+## Important Docker Commands {.smallest}
+
+| Command           | Purpose                       | Example                                                                                                                 |
+| ----------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `docker ps`       | List all containers           | `docker ps`                                                                                                             |
+| `docker image ls` | List all images               | `docker image ls`                                                                                                       |
+| `docker pull`     | Pull an image from a registry | `docker pull rocker/r-base`                                                                                             |
+| `docker build`    | Build a Dockerfile            | `docker build --tag my_image_name:latest .` ^[`.` means that we build the Dockerfile in the current working directory.] |
+| `docker run`      | Run an image as a container   | `docker run my_image_name:latest`                                                                                       |
+| `docker kill`     | Kill a container              | `docker kill my_container_id`                                                                                           |
+
+# Lab Session I 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Create, and build a Dockerfile that... {#lab-session-1 .smaller background-color="#f3e2b4"}
+
+::: {.content-box-blue}
+
+- builds on the rocker r-base image
+- copies a minimal R Script into the container and sets the work directory respectively (e.g. `/usr/local/src`)
+- hint: build the Dockerfile with a tag (e.g. `--tag: mydocker:latest`)
+:::
+
+:::{.fragment}
+
+### ...run the Docker image
+- in interactive mode (hint: `-ti`)
+- open a bash shell or the R console within the Docker
+- execute your minimal R Script
+:::
+
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 45, font_size = "1.5em")
+```
+
+
+
+# Part III: Package Versioning and RStudio Server {background-color="aquamarine"}
+
+## Docker rebuilds and reproducibility
+
+:::{.fragment}
+- different layers in a container are cached
+- order of layers is very important
+- rebuild of all layers after a change in the Dockerfile
+
+:::
+
+:::{.fragment}
+```
+RUN /opt/R/4.1.0/bin/R install.packages(c("shiny", "dplyr"))
+```
+- newest versions of Shiny and dplyr for each rebuild of the container
+- ⚡ reproducibility ⚡
+:::
+
+## MRAN to capture package states {.smaller}
+ 
+:::{.fragment}
+
+- Microsoft R Application Network (MRAN)
+- hosts daily snapshots of the CRAN R packages ( + R releases)
+- back to the year of 2014
+- specify date of snapshot in Dockerfile in an environmental variable:  
+
+```
+ENV MRAN_BUILD_DATE=2022-09-05
+```
+:::
+
+:::{.fragment}
+- install R packages from snapshots: 
+
+```
+# Install R package dependencies
+RUN install2.r -r https://cran.microsoft.com/snapshot/${MRAN_BUILD_DATE} \
+  --error \
+  tidyverse \
+  pacman \ 
+  modelsummary \
+```
+
+:::
+
+
+
+## System Pre-Requisites {.smaller}
+
+
+:::{.fragment .incremental}
+
+### Dependencies for package installation
+
+- light-weight base images
+- additional system dependencies for some packages (e.g. `sf`, `rJava`, `Rcpp`, `httr` package) `RUN apt-get update && apt-get install -y libssl-dev`
+- check list of system prerequisites for your operating system, [e.g. `httr`](https://packagemanager.rstudio.com/client/#/repos/1/packages/httr)
+- root access to manage dependencies
+- `docker run -d -p 8787:8787 -e ROOT=TRUE`
+
+
+:::
+
+
+
+
+
+## R Studio Server {.smaller}
+
+:::{.fragment}
+- part of the `rocker` base images
+- opens port 8787 for using RStudio server in a web browser at localhost:8787 
+- `-d` (deamon: container runs in the background) vs. `-ti` (interactive container)
+- docker run -d -p 8787:8787`
+:::
+
+
+:::{.fragment}
+- authentication in RStudio
+  + disable with environmental variable `-e DISABLE_AUTH=true` for local hosting
+  + or set custom password with `-e PASSWORD=<YOUR_PASS>`
+:::
+
+
+# Lab Session II 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+## Create a Dockerfile that... {#lab-session-2 .smaller background-color="#f3e2b4"}
+
+::: {.content-box-blue .fragment}
+
+- builds on the rocker tidyverse image (R 4.1.3)
+- uses an `MRAN` snapshot or relies on the `CRAN` package manager
+- pre-installs some R packages that you frequently use in your work
+:::
+
+:::{.fragment}
+
+- **...run the Docker**
+- and open a localhost to access R Studio Server
+- create a reproducible minimal Rmd (HTML) document in the IDE and render it within the container
+:::
+
+:::{.fragment}
+
+- **Kill the container and restart it**
+- Is your reproducible html document persistent? 
+:::
+
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 45, font_size = "1.5em")
+```
+
+
+
+
+# Part IV: Docker Access and Collaboration with Docker and Git {background-color="aquamarine"}
+
+
+## Docker Access {.smaller}
+
+
+::::{.columns}
+
+:::{.incremental .column width="50%"}
+
+### Copy
+
+- `COPY`: sharing and archiving of replication materials
+- code and data persistently in your container
+:::
+
+
+:::{.incremental .column width="50%"}
+
+
+### Volume
+
+:::{.smaller}
+
+- `-v` or `--volume`: active development, coding, and collaboration
+- share files between the host (local machine) and the container
+- mount local directory at run time as a volume inside the container
+- (up to) three fields, separated by colon characters (`:`) 
+  1) name of volume (unique on a given host machine)
+  2) path where the file or directory are mounted in container
+  3) optional: comma-separated list of options, such as `ro` (read only)
+- `docker run -d -p 8787:8787 -v /c:/Users/llehner/docker:/home/rstudio/ mycontainer:latest`
+:::
+
+:::
+
+::::
+
+
+
+
+# Bonus Lab Session (III) 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+
+## Create a Docker container that... {#lab-session-3a .smaller background-color="#f3e2b4"}
+
+::: {.content-box-blue .fragment}
+
+- builds on the rocker tidyverse image (R 4.2.1)
+- uses an `MRAN` snapshot or relies on the `CRAN` package manager
+- pre-installs some R packages that you frequently use in your work
+- mounts the local path of your Git repository into the container
+:::
+
+:::{.fragment}
+### 🎁 Bonus
+- Tweak your Dockerfile to include a tinytex installation so that you can render .qmd files to PDF in the container
+
+- installs the system depedencies for the `httr` package
+:::
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 15, font_size = "1.5em")
+```
+
+
+
+## Collaborate on a shared repositority...{#lab-session-3b background-color="#f3e2b4"}
+
+::: {.content-box-blue}
+
+- and build your colleagues' Dockerfile
+- contribute to their code within the Docker
+- track the code development with Git 
+
+:::
+
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 20, font_size = "1.5em")
+```
+
+## Outlook: our plan for the next session
+
+-   Part I: Encryption of files (with Veracrypt)
+-   Part II: Encryption of e-mails (with PGP)
+-   Bonus: Advanced research infrastructure
+
+:::{.fragment}
+-   **Readings**:
+    -   Rahal 2017. [An Introduction to the Command Line](https://crahal.github.io/teaching/AnIntroductionToTheCommandLine).
+    -   VeraCrypt. [Documentation](https://www.veracrypt.fr/en/Documentation.html).
+    -   The Carpentries: [Extra Unix Shell Material](https://carpentries-incubator.github.io/shell-extras/).
+    -   The Carpentries: [Introduction to the Command Line for Metagenomics](https://carpentries-incubator.github.io/shell-metagenomics/).
+:::
+
+# See you later 🤗👋  {background-color="aquamarine"}

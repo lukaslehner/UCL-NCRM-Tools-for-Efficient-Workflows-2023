@@ -1,0 +1,236 @@
+---
+title: "Tools for Efficient Workflows <br> Part 6: Encryption and advanced research infrastructure"
+subtitle: "Lukas Lehner and Maximilian Trenkmann"
+date: "UCL/NCRM, 01/12/2023"
+format:
+  revealjs:
+    toc: false
+    number-sections: false
+    theme: default
+    slide-number: c/t
+    self-contained: true
+    chalkboard: false
+    multiplex: true
+    scrollable: true
+    footer: "Tools for Efficient Workflows"
+    smaller: false
+    preview-links: auto
+    css: styles.css
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+## Our plan for the week {.smaller}
+
+```{r setup}
+pacman::p_load(
+  knitr,
+  tidyverse, 
+  countdown)
+```
+
+1.  Automatable reports
+
+2.  Version control
+
+3.  Dissemination and academic websites
+
+4.  Containerisation for reproducible environments
+
+5.  **Encryption and advanced research infrastructure**
+
+## What did we do in the last part?
+
+-   **Containerisation for reproducible environments**
+
+::: notes
+:::
+
+# Part 5: Encryption and advanced research infrastructure {background-color="aquamarine"}
+
+-   Part I: Encryption of files (with Veracrypt)
+-   Part II: Encryption of e-mails (with PGP)
+-   Bonus: Advanced research infrastructure
+
+## Any questions from the readings?
+
+-   Compulsory reading:
+    -   Rahal. 2017. [An Introduction to the Command Line](https://crahal.github.io/teaching/AnIntroductionToTheCommandLine).
+    -   VeraCrypt. [Documentation](https://www.veracrypt.fr/en/Documentation.html).
+-   Suggested reading:
+    -   The Carpentries: [Extra Unix Shell Material](https://carpentries-incubator.github.io/shell-extras/).
+    -   The Carpentries: [Introduction to the Command Line for Metagenomics](https://carpentries-incubator.github.io/shell-metagenomics/).
+
+# Part I: Encryption {background-color="aquamarine"}
+
+## Encryption - why in a context of open science?
+
+::: fragment
+-   to comply with data protection regulations.
+
+-   to comply with ethics protocols.
+
+-   to protect human subjects of research.
+
+-   to prevent data theft.
+:::
+
+## Tools
+
+::: fragment
+-   Veracrypt
+-   7-Zip
+-   Bitlocker (Windows)
+-   FileVault (Mac)
+-   LastPass
+:::
+
+## Veracrypt
+
+-   Container in Veracrypt =/ Container in Docker
+
+-   Creates a virtual encrypted disk within a folder
+
+-   Encrypts a storage device such as a USB or hard drive.
+
+-   Several encryption options
+
+![](figs/veracrypt.png)
+
+## Veracrypt: hacks
+
+-   Favourites + open explorer automatically
+
+-   Conflicting copies: solving issues with shared drives\
+    --\> delete online and sync again
+
+# Lab Session I 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+-   Use Veracrypt to create an encrypted file container to store **a copy** of your UCL/NCRM course material.
+
+    -   Attention: create a new container, do not select an existing folder with files inside.
+    -   Use the AES encryption algorythm. You need to hoover around with your cursor to encrypt the file.
+
+-   Open the container and access your data via a separate disk.
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 25, font_size = "1.5em")
+```
+
+# Part II: Pretty Good Privacy (PGP) for communication {background-color="aquamarine"}
+
+Why use encryption?
+
+- Security
+- Personal Privacy
+- Privacy Laws
+
+
+## Asymetrical Encryption
+
+- public key
+  - can be sent anywhere
+  - is used to encrypt messeges
+- private key
+  - should be kept on your computer at all times
+  - is used to decrypt messages
+
+
+# Lab Session II 👩‍💻 👨‍💻 {background-color="#f3e2b4"}
+
+- Create a PGP key and send an encrypted message
+
+## Create The Keys {background-color="#f3e2b4" .smaller}
+
+- Download [Thunderbird](https://www.thunderbird.net/de/download/)
+- Add a mail account
+- Go to Account > End-to-End Encryption > OpenPGP > Add Key 
+  - Create keys with default settings
+- Click Publish
+- You should get an email from keyserver@keys.openpgp.org
+- Click on the confirmation link in the email
+
+## Send an encrypted message to yourself {background-color="#f3e2b4"}
+
+- click "New Message"
+- After entering your own email as a recipient you should see a "encrypt" button appear
+- Add a sentence and send the message
+
+
+```{r}
+#| echo: false
+#| cache: false
+countdown(minutes = 25, font_size = "1.5em")
+```
+
+
+# Part III: Advanced research infrastructure {background-color="aquamarine"}
+
+-   Data Repositories
+
+-   Preprints
+
+-   Producitivity tools
+
+-   Terminal
+
+## Data Repositories
+
+-   [Harvard Dataverse](https://dataverse.harvard.edu/)
+-   [Zenodo](https://zenodo.org/)
+-   [Open Science Framework (OSF)](https://osf.io/)
+-   [Figshare](https://figshare.com/)
+
+::: fragment
+-   =/ pre-analysis plan registries
+    -   <https://www.socialscienceregistry.org/>
+    -   <https://egap.org/>
+-   =/ [registered reports](https://www.cos.io/initiatives/registered-reports)
+:::
+
+## Preprint Repositories
+
+-   [ArXive](https://arxiv.org/)
+
+-   [SocArXive](https://osf.io/preprints/socarxiv)
+
+-   [OSF Preprints](https://osf.io/preprints/)
+
+-   [Figshare](https://figshare.com/)
+
+-   [APSA Preprints](https://preprints.apsanet.org/)
+
+-   [RePEc: Research Papers in Economics](http://repec.org/)
+
+-   [SSRN: Social Science Research Network](https://www.ssrn.com/index.cfm/en/)
+
+## General productivity tools
+
+-   [Slack](https://slack.com/) for communication
+    -   or Discord, (a more sophisticated version of MS Teams), ...
+-   [Trello](https://trello.com/en) for managing your tasks
+    -   or Evernote, (a more sophisticated version of Google Keeps), ...
+-   [Asana](https://asana.com/) for collaboration teams
+    -   or Wrike, Jira,...
+
+
+# Recap: 1-6 {background-color="aquamarine"}
+
+1.  Automatable reports
+
+2.  Version control
+
+3.  Dissemination and academic websites
+  - Collaboration
+
+4.  Containerisation for reproducible environments
+
+5. Encryption
+
+
+# Stay in touch 🤗👋 {background-color="aquamarine"}
+
+-   🦸🦸‍♀️ 🦸‍♂️ champion your workflow and reproducibility
